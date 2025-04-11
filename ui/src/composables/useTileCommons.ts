@@ -47,6 +47,22 @@ export default function useTileCommons(config: TileConfig) {
     return state.value.label
   })
 
+  const link = computed((): string | undefined => {
+    if (config.link) {
+      if (config.link === '-') {
+        return
+      }
+
+      return config.link
+    }
+
+    if (state.value === undefined) {
+      return
+    }
+
+    return state.value.link
+  })
+
   const build = computed((): TileBuild | undefined => {
     if (state.value === undefined) {
       return
@@ -108,6 +124,7 @@ export default function useTileCommons(config: TileConfig) {
     theme,
     state,
     label,
+    link,
     build,
     status,
     previousStatus,

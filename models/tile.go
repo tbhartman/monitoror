@@ -12,6 +12,7 @@ type (
 
 		Label   string `json:"label,omitempty"`
 		Message string `json:"message,omitempty"`
+		Link    string `json:"link,omitempty"`
 
 		Metrics *TileMetrics `json:"metrics,omitempty"`
 		Build   *TileBuild   `json:"build,omitempty"`

@@ -5,6 +5,7 @@ type TileConfig = {
   stateKey: string,
   type: TileType,
   label?: string,
+  link?: string,
   columnSpan?: number,
   rowSpan?: number,
   url?: string,

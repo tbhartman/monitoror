@@ -130,6 +130,7 @@ func (cu *configUsecase) hydrateGeneratorTile(configBag *models.ConfigBag, tile 
 		newTile := models.TileConfig{
 			Type:          generatorMetadata.GeneratedTileType,
 			Label:         result.Label,
+			Link:          result.Link,
 			Params:        make(map[string]interface{}),
 			ConfigVariant: tile.ConfigVariant,
 			ColumnSpan:    tile.ColumnSpan,

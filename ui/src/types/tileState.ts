@@ -8,6 +8,7 @@ type TileState = {
   status: TileStatus,
   label?: string,
   message?: string,
+  link?: string,
   metrics?: TileMetrics,
   build?: TileBuild
 }

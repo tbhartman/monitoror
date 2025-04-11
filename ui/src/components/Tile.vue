@@ -6,6 +6,15 @@
         <template v-if="mergeRequestLabelPrefix && label"> @</template>
         {{ label }}
       </div>
+      <div class="c-monitoror-tile--link" v-if="link">
+        <a :href="link" :title="link" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 22">
+          <g>
+            <path d="M 20,9 V 4 h -5" />
+            <path d="m 20,4 -7,7" />
+            <path d="m 10,5 h -1.8 C 7.1,5 6.5,5 6.1,5.2 5.7,5.4 5.4,5.7 5.2,6.1 5,6.5 5,7.1 5,8.2 v 7.6 c 0,1.1 0,1.6 0.2,2.1 0.2,0.4 0.5,0.7 0.9,0.9 C 6.5,19 7.1,19 8.2,19 h 7.6 c 1.1,0 1.7,0 2.1,-0.2 0.4,-0.2 0.7,-0.5 0.9,-0.9 C 19,17.5 19,16.9 19,15.8 V 14" />
+          </g>
+        </svg></a>
+      </div>
 
       <div class="c-monitoror-tile--build-info" v-if="branch || buildId">
         <template v-if="branch">
@@ -103,6 +112,7 @@ export default defineComponent({
 
       // content
       label,
+      link,
 
       // build
       build,
@@ -219,6 +229,7 @@ export default defineComponent({
       // content
       label,
       message,
+      link,
       displayedSubTiles,
 
       // build
@@ -463,6 +474,23 @@ export default defineComponent({
     opacity: 0.35;
     width: 40px;
     height: 40px;
+  }
+  .c-monitoror-tile--link {
+    position: absolute;
+    right: var(--tile-padding);
+    top: var(--tile-padding);
+    opacity: 0.35;
+    width: 40px;
+    height: 40px;
+  }
+  .c-monitoror-tile--link svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: black;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3px;
   }
 
   .c-monitoror-tile--icon svg {

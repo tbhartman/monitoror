@@ -22,6 +22,7 @@ type (
 		Type coreModels.TileType `json:"type" validate:"required"`
 
 		Label      string `json:"label,omitempty"`
+		Link       string `json:"link,omitempty"`
 		RowSpan    *int   `json:"rowSpan,omitempty" validate:"omitempty,gt=0"`
 		ColumnSpan *int   `json:"columnSpan,omitempty" validate:"omitempty,gt=0"`
 

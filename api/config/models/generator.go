@@ -5,6 +5,7 @@ type (
 
 	GeneratedTile struct {
 		Label  string
+		Link   string
 		Params interface{}
 	}
 )
