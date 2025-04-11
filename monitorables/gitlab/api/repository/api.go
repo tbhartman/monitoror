@@ -195,6 +195,7 @@ func parseMergeRequest(gitlabMergeRequest *gitlab.MergeRequest) *models.MergeReq
 	mergeRequest := &models.MergeRequest{
 		ID:              gitlabMergeRequest.IID,
 		Title:           gitlabMergeRequest.Title,
+		WebURL:          gitlabMergeRequest.WebURL,
 		SourceProjectID: gitlabMergeRequest.SourceProjectID,
 		SourceBranch:    gitlabMergeRequest.SourceBranch,
 		CommitSHA:       gitlabMergeRequest.SHA,

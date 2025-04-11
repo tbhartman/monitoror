@@ -223,6 +223,7 @@ func (gu *gitlabUsecase) MergeRequestsGenerator(params interface{}) ([]uiConfigM
 		p.ID = pointer.ToInt(mergeRequest.ID)
 
 		results = append(results, uiConfigModels.GeneratedTile{
+			Link:   mergeRequest.WebURL,
 			Params: p,
 		})
 

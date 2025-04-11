@@ -9,6 +9,7 @@ type MergeRequest struct {
 	Title  string
 	Author coreModels.Author
 
+	WebURL          string
 	SourceProjectID int
 	SourceBranch    string
 	CommitSHA       string
