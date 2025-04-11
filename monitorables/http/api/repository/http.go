@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/monitoror/monitoror/monitorables/http/api"
@@ -14,6 +15,7 @@ import (
 type (
 	httpRepository struct {
 		httpClient *http.Client
+		header     http.Header
 	}
 )
 
@@ -33,11 +35,24 @@ func NewHTTPRepository(config *config.HTTP) api.Repository {
 	}
 	client := &http.Client{Transport: tr, Timeout: time.Duration(config.Timeout) * time.Millisecond}
 
-	return &httpRepository{client}
+	var header = make(http.Header)
+	for _, h := range config.Header {
+		key, value, ok := strings.Cut(h, ":")
+		if ok {
+			header.Add(key, value)
+		}
+	}
+
+	return &httpRepository{client, header}
 }
 
 func (r *httpRepository) Get(url string) (response *models.Response, err error) {
-	resp, err := r.httpClient.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return
+	}
+	req.Header = r.header.Clone()
+	resp, err := r.httpClient.Do(req)
 	if err != nil {
 		return
 	}
