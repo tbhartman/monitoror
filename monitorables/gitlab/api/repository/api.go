@@ -198,6 +198,7 @@ func parseMergeRequest(gitlabMergeRequest *gitlab.MergeRequest) *models.MergeReq
 		SourceProjectID: gitlabMergeRequest.SourceProjectID,
 		SourceBranch:    gitlabMergeRequest.SourceBranch,
 		CommitSHA:       gitlabMergeRequest.SHA,
+		WorkInProgress:  gitlabMergeRequest.WorkInProgress,
 	}
 
 	if gitlabMergeRequest.Author != nil {

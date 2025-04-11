@@ -7,5 +7,6 @@ import (
 type MergeRequestGeneratorParams struct {
 	params.Default
 
-	ProjectID *int `json:"projectId" query:"projectId" validate:"required"`
+	ProjectID *int  `json:"projectId" query:"projectId" validate:"required"`
+	IgnoreWIP *bool `json:"ignoreWIP" query:"ignoreWIP"`
 }

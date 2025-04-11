@@ -214,6 +214,10 @@ func (gu *gitlabUsecase) MergeRequestsGenerator(params interface{}) ([]uiConfigM
 
 	var results []uiConfigModels.GeneratedTile
 	for _, mergeRequest := range mergeRequests {
+		if mergeRequest.WorkInProgress && *prParams.IgnoreWIP {
+			continue
+		}
+
 		p := &models.MergeRequestParams{}
 		p.ProjectID = prParams.ProjectID
 		p.ID = pointer.ToInt(mergeRequest.ID)

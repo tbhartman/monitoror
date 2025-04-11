@@ -12,4 +12,5 @@ type MergeRequest struct {
 	SourceProjectID int
 	SourceBranch    string
 	CommitSHA       string
+	WorkInProgress  bool
 }
