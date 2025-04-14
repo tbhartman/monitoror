@@ -189,6 +189,22 @@ func matchRegex(params models.RegexParamsProvider, str string) (bool, string) {
 	return true, substrings[1]
 }
 
+func extractValueFromMap(key string, data interface{}) (value interface{}, ok bool) {
+	// map[string]interface{} => JSON Style
+	if m, isJSONMap := data.(map[string]interface{}); isJSONMap {
+		// Check if key is in map
+		value, ok = m[key]
+		return
+	}
+	// map[interface{}]interface{} => YAML Style
+	if m, isYAMLMap := data.(map[interface{}]interface{}); isYAMLMap {
+		// Check if key is in map
+		value, ok = m[key]
+		return
+	}
+	return nil, false
+}
+
 // extractValue extract value from interface{} (json/yaml/...)
 // the key is in doted format like this ".bloc1."bloc.2".[2].value"
 func lookupKey(params models.FormattedParamsProvider, data interface{}) (bool, string) {
@@ -201,6 +217,9 @@ func lookupKey(params models.FormattedParamsProvider, data interface{}) (bool, s
 		// Lookup for array
 		r := ArrayKeyPartRegex.FindStringSubmatch(keyPart)
 		if len(r) == 2 {
+			if r[1] == "" {
+				continue
+			}
 			arrayIndex, _ := strconv.Atoi(r[1])
 			// Look if data type is array and check if index wasn't out of bounds
 			if array, ok := data.([]interface{}); ok && len(array) > arrayIndex && arrayIndex >= 0 {
@@ -210,24 +229,26 @@ func lookupKey(params models.FormattedParamsProvider, data interface{}) (bool, s
 			// If array didn't match, test with map
 		}
 
-		// Lookup for map
 		keyPart = strings.ReplaceAll(keyPart, `"`, ``)
 
-		// map[string]interface{} => JSON Style
-		if m, ok := data.(map[string]interface{}); ok {
-			// Check if keyPart is in map
-			if value, ok := m[keyPart]; ok {
-				data = value
-				continue
+		// Lookup for array
+		if m, ok := data.([]interface{}); ok {
+			var newArray []interface{}
+			for _, element := range m {
+				if value, ok := extractValueFromMap(keyPart, element); ok {
+					newArray = append(newArray, value)
+				} else {
+					return false, ""
+				}
 			}
+			data = newArray
+			continue
 		}
-		// map[interface{}]interface{} => YAML Style
-		if m, ok := data.(map[interface{}]interface{}); ok {
-			// Check if keyPart is in map
-			if value, ok := m[keyPart]; ok {
-				data = value
-				continue
-			}
+
+		// Lookup for map
+		if value, ok := extractValueFromMap(keyPart, data); ok {
+			data = value
+			continue
 		}
 
 		return false, ""

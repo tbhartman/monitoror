@@ -231,13 +231,24 @@ func TestHTTPUsecase_LookupKey_Json(t *testing.T) {
 	}
 }
 `
-	httpFormatted := &models.HTTPFormattedParams{}
-	httpFormatted.Key = `bloc1."bloc.2".[0].value`
 
 	var data interface{}
 	err := json.Unmarshal([]byte(input), &data)
 	if assert.NoError(t, err) {
+		httpFormatted := &models.HTTPFormattedParams{}
+
+		httpFormatted.Key = `bloc1."bloc.2".[0].value`
 		found, value := lookupKey(httpFormatted, data)
+		assert.True(t, found)
+		assert.Equal(t, "YEAH !!", value)
+
+		httpFormatted.Key = `bloc1."bloc.2".[]`
+		found, value = lookupKey(httpFormatted, data)
+		assert.True(t, found)
+		assert.Equal(t, "3", value)
+
+		httpFormatted.Key = `bloc1."bloc.2".[].value.[0]`
+		found, value = lookupKey(httpFormatted, data)
 		assert.True(t, found)
 		assert.Equal(t, "YEAH !!", value)
 	}
