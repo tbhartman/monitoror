@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"bufio"
 	"crypto/tls"
 	"io/ioutil"
 	"net/http"
@@ -36,8 +37,9 @@ func NewHTTPRepository(config *config.HTTP) api.Repository {
 	client := &http.Client{Transport: tr, Timeout: time.Duration(config.Timeout) * time.Millisecond}
 
 	var header = make(http.Header)
-	for _, h := range config.Header {
-		key, value, ok := strings.Cut(h, ":")
+	var headerScanner = bufio.NewScanner(strings.NewReader(config.Header))
+	for headerScanner.Scan() {
+		key, value, ok := strings.Cut(headerScanner.Text(), ":")
 		if ok {
 			header.Add(key, value)
 		}

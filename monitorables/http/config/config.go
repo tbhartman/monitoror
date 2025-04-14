@@ -6,12 +6,11 @@ type (
 		SSLVerify   bool
 		Certificate string
 		Key         string
-		Header      []string
+		Header      string
 	}
 )
 
 var Default = &HTTP{
 	Timeout:   2000,
 	SSLVerify: true,
-	Header:    make([]string, 0),
 }
