@@ -9,6 +9,7 @@ import (
 type Pipeline struct {
 	ID         int
 	Branch     string
+	Name       string
 	Author     coreModels.Author
 	Status     string
 	StartedAt  *time.Time

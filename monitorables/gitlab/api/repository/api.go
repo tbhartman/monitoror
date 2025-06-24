@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/monitoror/monitoror/monitorables/gitlab/api"
@@ -18,6 +19,7 @@ type (
 	gitlabRepository struct {
 		config *config.Gitlab
 
+		client               *gitlab.Client
 		issuesService        gogitlab.IssuesService
 		pipelinesService     gogitlab.PipelinesService
 		mergeRequestsService gogitlab.MergeRequestsService
@@ -40,6 +42,7 @@ func NewGitlabRepository(config *config.Gitlab) api.Repository {
 	return &gitlabRepository{
 		config: config,
 
+		client:               git,
 		issuesService:        git.Issues,
 		pipelinesService:     git.Pipelines,
 		mergeRequestsService: git.MergeRequests,
@@ -86,14 +89,25 @@ func (gr *gitlabRepository) GetCountIssues(params *models.IssuesParams) (int, er
 }
 
 func (gr *gitlabRepository) GetPipeline(projectID, pipelineID int) (*models.Pipeline, error) {
-	gitlabPipeline, _, err := gr.pipelinesService.GetPipeline(projectID, pipelineID)
+	gitlabPipeline, resp, err := gr.pipelinesService.GetPipeline(projectID, pipelineID)
 	if err != nil {
 		return nil, err
+	}
+
+	type altPipeline struct {
+		Name string `json:"name"`
+	}
+	var alt altPipeline
+	var reqPath = strings.TrimPrefix(resp.Request.URL.Path, "/api/v4")
+	req, err := gr.client.NewRequest(resp.Request.Method, reqPath, nil, nil)
+	if err == nil {
+		gr.client.Do(req, &alt)
 	}
 
 	pipeline := &models.Pipeline{
 		ID:         gitlabPipeline.ID,
 		Branch:     gitlabPipeline.Ref,
+		Name:       alt.Name,
 		Status:     gitlabPipeline.Status,
 		StartedAt:  gitlabPipeline.StartedAt,
 		FinishedAt: gitlabPipeline.FinishedAt,

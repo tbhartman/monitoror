@@ -164,6 +164,7 @@ func (gu *gitlabUsecase) MergeRequest(params *models.MergeRequestParams) (*coreM
 
 func (gu *gitlabUsecase) computePipeline(params interface{}, tile *coreModels.Tile, pipeline *models.Pipeline) {
 	tile.Status = parseStatus(pipeline.Status)
+	tile.Message = pipeline.Name
 
 	// Set Previous Status
 	strPipelineID := fmt.Sprintf("%d", pipeline.ID)
